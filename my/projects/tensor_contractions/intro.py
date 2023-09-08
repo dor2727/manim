@@ -1,33 +1,39 @@
+from consts import (
+    CIRCLE_COLOR,
+    INITIAL_LEG_LENGTH,
+    SQUARE_COLOR,
+    TRIANGLE_COLOR,
+    TRIANGLE_LEG_WIDTH_OFFSET,
+)
+
 from manim import *
-from consts import *
 
 spacing_horizontal = 3.5
 
-def create_body(shape: str = "square", size: float=DEFAULT_DOT_RADIUS*3):
-    # posible shape values: "dot" | "square" | "diamond"
+
+def create_body(shape: str = "square", size: float = DEFAULT_DOT_RADIUS * 3):
+    # possible shape values: "dot" | "square" | "diamond"
+    body: Mobject
     if shape == "dot":
         body = Dot(radius=size, color=CIRCLE_COLOR)
-    else: # square / diamond
-        body = Square(side_length=size*2, color=SQUARE_COLOR, fill_opacity=1.0)
+    else:  # square / diamond
+        body = Square(side_length=size * 2, color=SQUARE_COLOR, fill_opacity=1.0)
 
     if shape == "diamond":
-        body.rotate(PI/4)
+        body.rotate(PI / 4)
 
     return body
 
-def create_left_leg(body: Mobject, leg_length: float=INITIAL_LEG_LENGTH):
-    return Line(
-            start=body.get_left(),
-            end=body.get_left() + leg_length * LEFT
-        )
 
-def create_right_leg(body: Mobject, leg_length: float=INITIAL_LEG_LENGTH):
-    return Line(
-            start=body.get_right(),
-            end=body.get_right() + leg_length * RIGHT
-        )
+def create_left_leg(body: Mobject, leg_length: float = INITIAL_LEG_LENGTH):
+    return Line(start=body.get_left(), end=body.get_left() + leg_length * LEFT)
 
-def create_vector_left(shape="square", leg_length: float=INITIAL_LEG_LENGTH):
+
+def create_right_leg(body: Mobject, leg_length: float = INITIAL_LEG_LENGTH):
+    return Line(start=body.get_right(), end=body.get_right() + leg_length * RIGHT)
+
+
+def create_vector_left(shape="square", leg_length: float = INITIAL_LEG_LENGTH):
     vector = VMobject()
     vector_body = create_body(shape)
     vector.add(
@@ -36,7 +42,12 @@ def create_vector_left(shape="square", leg_length: float=INITIAL_LEG_LENGTH):
     )
     return vector
 
-def create_matrix_horizontal(shape="square", left_leg_length: float=INITIAL_LEG_LENGTH, right_leg_length: float=INITIAL_LEG_LENGTH):
+
+def create_matrix_horizontal(
+    shape="square",
+    left_leg_length: float = INITIAL_LEG_LENGTH,
+    right_leg_length: float = INITIAL_LEG_LENGTH,
+):
     matrix = VMobject()
     matrix_body = create_body(shape)
     matrix.add(
@@ -77,13 +88,13 @@ class Intro_2(Scene):
 
     def introduce_mathematical_objects(self):
         self.some_number = some_number = Tex("2.4")
-        some_number.shift(spacing_horizontal*LEFT)
+        some_number.shift(spacing_horizontal * LEFT)
 
         # some_vector = Tex("$$ \\begin{pmatrix} 1 \\\\ 2 \\\\ 3 \\end{pmatrix} $$")
         self.some_vector = some_vector = Matrix([[1], [2], [3]])
 
-        self.some_matrix = some_matrix = Matrix([["\\pi", 5], [-1, 'e']])
-        some_matrix.shift(spacing_horizontal*RIGHT)
+        self.some_matrix = some_matrix = Matrix([["\\pi", 5], [-1, "e"]])
+        some_matrix.shift(spacing_horizontal * RIGHT)
 
         self.play(Create(some_number), run_time=0.5)
         self.wait(0.5)
@@ -97,18 +108,18 @@ class Intro_2(Scene):
             self.some_number.animate.shift(2 * UP),
             self.some_vector.animate.shift(2 * UP),
             self.some_matrix.animate.shift(2 * UP),
-            run_time=1.5
+            run_time=1.5,
         )
 
     def introduce_tnn_objects(self):
         self.tnn_number = tnn_number = create_body("dot")
-        tnn_number.shift(spacing_horizontal*LEFT + DOWN)
+        tnn_number.shift(spacing_horizontal * LEFT + DOWN)
 
         self.tnn_vector = tnn_vector = create_vector_left("dot")
         tnn_vector.shift(DOWN)
 
         self.tnn_matrix = tnn_matrix = create_matrix_horizontal("dot")
-        tnn_matrix.shift(spacing_horizontal*RIGHT + DOWN)
+        tnn_matrix.shift(spacing_horizontal * RIGHT + DOWN)
 
         self.play(Create(tnn_number), run_time=0.5)
         self.wait(0.5)
@@ -138,14 +149,13 @@ class Intro(Scene):
         #       - Vectors
         #       - and Matrices
 
-
         some_number = Tex("2.4")
-        some_number.shift(spacing_horizontal*LEFT)
+        some_number.shift(spacing_horizontal * LEFT)
 
         some_vector = Tex("$$ \\begin{pmatrix} 1 \\\\ 2 \\\\ 3 \\end{pmatrix} $$")
 
-        some_matrix = Matrix([["\\pi", 5], [-1, 'e']])
-        some_matrix.shift(spacing_horizontal*RIGHT)
+        some_matrix = Matrix([["\\pi", 5], [-1, "e"]])
+        some_matrix.shift(spacing_horizontal * RIGHT)
 
         self.play(Create(some_number), run_time=0.5)
         self.wait(0.5)
@@ -156,19 +166,18 @@ class Intro(Scene):
 
         self.wait(1)
 
-
         # Text: Though we will represent them as
         self.play(
             some_number.animate.shift(2 * UP),
             some_vector.animate.shift(2 * UP),
             some_matrix.animate.shift(2 * UP),
-            run_time=1.5
+            run_time=1.5,
         )
 
         self.wait(1)
 
         tnn_number = Dot(color=CIRCLE_COLOR)
-        tnn_number.shift(spacing_horizontal*LEFT + DOWN)
+        tnn_number.shift(spacing_horizontal * LEFT + DOWN)
 
         tnn_vector_dot = Dot(color=CIRCLE_COLOR)
         tnn_vector = VMobject()
@@ -176,8 +185,8 @@ class Intro(Scene):
             tnn_vector_dot,
             Line(
                 start=tnn_vector_dot.get_right(),
-                end=tnn_vector_dot.get_right() + INITIAL_LEG_LENGTH * RIGHT
-            )
+                end=tnn_vector_dot.get_right() + INITIAL_LEG_LENGTH * RIGHT,
+            ),
         )
         tnn_vector.shift(DOWN)
 
@@ -187,14 +196,14 @@ class Intro(Scene):
             tnn_matrix_dot,
             Line(
                 start=tnn_matrix_dot.get_right(),
-                end=tnn_matrix_dot.get_right() + INITIAL_LEG_LENGTH * RIGHT
+                end=tnn_matrix_dot.get_right() + INITIAL_LEG_LENGTH * RIGHT,
             ),
             Line(
                 start=tnn_matrix_dot.get_left(),
-                end=tnn_matrix_dot.get_left() + INITIAL_LEG_LENGTH * LEFT
+                end=tnn_matrix_dot.get_left() + INITIAL_LEG_LENGTH * LEFT,
             ),
         )
-        tnn_matrix.shift(spacing_horizontal*RIGHT + DOWN)
+        tnn_matrix.shift(spacing_horizontal * RIGHT + DOWN)
 
         # Text: - dots      (number)
         #       - and lines (vector, matrix)
@@ -216,12 +225,16 @@ class Intro(Scene):
         #       - a square
         #       - a diamond
 
-        tnn_vector_square = Square(side_length=DEFAULT_DOT_RADIUS*2, color=SQUARE_COLOR, fill_opacity=1.0)
+        tnn_vector_square = Square(
+            side_length=DEFAULT_DOT_RADIUS * 2, color=SQUARE_COLOR, fill_opacity=1.0
+        )
         tnn_vector_square.move_to(tnn_vector_dot.get_center())
         self.play(Transform(tnn_vector_dot, tnn_vector_square))
 
-        tnn_matrix_square = Square(side_length=DEFAULT_DOT_RADIUS*2, color=SQUARE_COLOR, fill_opacity=1.0)
-        tnn_matrix_square.rotate(PI/4)
+        tnn_matrix_square = Square(
+            side_length=DEFAULT_DOT_RADIUS * 2, color=SQUARE_COLOR, fill_opacity=1.0
+        )
+        tnn_matrix_square.rotate(PI / 4)
         tnn_matrix_square.move_to(tnn_matrix_dot.get_center())
         self.play(Transform(tnn_matrix_dot, tnn_matrix_square))
 
@@ -246,7 +259,7 @@ class SimpleActions(Scene):
         #       We can represent a number as a circle with no legs
 
         tnn_number = Dot(color=CIRCLE_COLOR)
-        tnn_number.shift(spacing_horizontal*LEFT + UP)
+        tnn_number.shift(spacing_horizontal * LEFT + UP)
         self.play(Create(tnn_number), run_time=0.5)
 
         self.wait(1)
@@ -259,10 +272,10 @@ class SimpleActions(Scene):
             tnn_vector_left_dot,
             Line(
                 start=tnn_vector_left_dot.get_right(),
-                end=tnn_vector_left_dot.get_right() + INITIAL_LEG_LENGTH * RIGHT
-            )
+                end=tnn_vector_left_dot.get_right() + INITIAL_LEG_LENGTH * RIGHT,
+            ),
         )
-        tnn_vector_left.shift((spacing_horizontal + 1)*LEFT + DOWN)
+        tnn_vector_left.shift((spacing_horizontal + 1) * LEFT + DOWN)
 
         tnn_vector_right_dot = Dot(color=CIRCLE_COLOR)
         tnn_vector_right = VMobject()
@@ -270,23 +283,18 @@ class SimpleActions(Scene):
             tnn_vector_right_dot,
             Line(
                 start=tnn_vector_right_dot.get_left(),
-                end=tnn_vector_right_dot.get_left() + INITIAL_LEG_LENGTH * LEFT
-            )
+                end=tnn_vector_right_dot.get_left() + INITIAL_LEG_LENGTH * LEFT,
+            ),
         )
-        tnn_vector_right.shift((spacing_horizontal - 1)*LEFT + DOWN)
+        tnn_vector_right.shift((spacing_horizontal - 1) * LEFT + DOWN)
 
-        self.play(
-            Create(tnn_vector_left),
-            Create(tnn_vector_right),
-            run_time=0.5
-        )
+        self.play(Create(tnn_vector_left), Create(tnn_vector_right), run_time=0.5)
 
         self.wait(1)
 
         # Text: And taking their dot product
         dot_product_line = Line(
-            start=tnn_vector_left.get_right(),
-            end=tnn_vector_right.get_left()
+            start=tnn_vector_left.get_right(), end=tnn_vector_right.get_left()
         )
 
         self.play(Create(dot_product_line), run_time=0.5)
@@ -300,7 +308,7 @@ class SimpleActions(Scene):
 
         surrounding_rectangle = Rectangle(
             height=(DEFAULT_DOT_RADIUS * 2 + 0.5) * 2,
-            width=np.linalg.norm( rectangle_right_edge - rectangle_left_edge ),
+            width=np.linalg.norm(rectangle_right_edge - rectangle_left_edge),
             color=RED_B,
         )
         surrounding_rectangle.move_to(dot_product_line.get_center())
@@ -318,15 +326,14 @@ class SimpleActions(Scene):
             tnn_vector_dot,
             Line(
                 start=tnn_vector_dot.get_left(),
-                end=tnn_vector_dot.get_left() + INITIAL_LEG_LENGTH * LEFT
-            )
+                end=tnn_vector_dot.get_left() + INITIAL_LEG_LENGTH * LEFT,
+            ),
         )
         tnn_vector.shift(UP)
 
         self.play(Create(tnn_vector), run_time=0.5)
 
         self.wait(1)
-
 
         # Text: And the result of matrix-vector multiplication
 
@@ -341,8 +348,8 @@ class SimpleActions(Scene):
             tnn_vector_left_dot,
             Line(
                 start=tnn_vector_left_dot.get_right(),
-                end=tnn_vector_left_dot.get_right() + INITIAL_LEG_LENGTH * RIGHT
-            )
+                end=tnn_vector_left_dot.get_right() + INITIAL_LEG_LENGTH * RIGHT,
+            ),
         )
         tnn_vector_left.shift(LEFT + DOWN)
 
@@ -352,26 +359,21 @@ class SimpleActions(Scene):
             tnn_matrix_dot,
             Line(
                 start=tnn_matrix_dot.get_right(),
-                end=tnn_matrix_dot.get_right() + (INITIAL_LEG_LENGTH + 0.8) * RIGHT
+                end=tnn_matrix_dot.get_right() + (INITIAL_LEG_LENGTH + 0.8) * RIGHT,
             ),
             Line(
                 start=tnn_matrix_dot.get_left(),
-                end=tnn_matrix_dot.get_left() + INITIAL_LEG_LENGTH * LEFT
+                end=tnn_matrix_dot.get_left() + INITIAL_LEG_LENGTH * LEFT,
             ),
         )
         tnn_matrix.shift(RIGHT + DOWN)
 
-        self.play(
-            Create(tnn_vector_left),
-            Create(tnn_matrix),
-            run_time=0.5
-        )
+        self.play(Create(tnn_vector_left), Create(tnn_matrix), run_time=0.5)
 
         self.wait(1)
 
         dot_product_line = Line(
-            start=tnn_vector_left.get_right(),
-            end=tnn_matrix.get_left()
+            start=tnn_vector_left.get_right(), end=tnn_matrix.get_left()
         )
 
         self.play(Create(dot_product_line), run_time=0.5)
@@ -379,13 +381,15 @@ class SimpleActions(Scene):
         self.wait(1)
 
         # Text: Is also a vector, which is a one-legged object
-        rectangle_right_edge = tnn_matrix.get_right() + 0.4 * LEFT # a bit to the left, cutting the matrix
+        rectangle_right_edge = (
+            tnn_matrix.get_right() + 0.4 * LEFT
+        )  # a bit to the left, cutting the matrix
         rectangle_left_edge = tnn_vector_left.get_left() + 0.5 * LEFT
         rectangle_center_height = DOWN
 
         surrounding_rectangle = Rectangle(
             height=(DEFAULT_DOT_RADIUS * 2 + 0.5) * 2,
-            width=np.linalg.norm( rectangle_right_edge - rectangle_left_edge ),
+            width=np.linalg.norm(rectangle_right_edge - rectangle_left_edge),
             color=RED_B,
         )
         surrounding_rectangle.move_to(dot_product_line.get_center())
@@ -401,11 +405,11 @@ class SimpleActions(Scene):
             tnn_matrix_dot,
             Line(
                 start=tnn_matrix_dot.get_right(),
-                end=tnn_matrix_dot.get_right() + INITIAL_LEG_LENGTH * RIGHT
+                end=tnn_matrix_dot.get_right() + INITIAL_LEG_LENGTH * RIGHT,
             ),
             Line(
                 start=tnn_matrix_dot.get_left(),
-                end=tnn_matrix_dot.get_left() + INITIAL_LEG_LENGTH * LEFT
+                end=tnn_matrix_dot.get_left() + INITIAL_LEG_LENGTH * LEFT,
             ),
         )
         tnn_matrix.shift(UP)
@@ -413,7 +417,6 @@ class SimpleActions(Scene):
         self.play(Create(tnn_matrix), run_time=0.5)
 
         self.wait(1)
-
 
         # Text: And the result of matrix-vector multiplication
 
@@ -428,11 +431,11 @@ class SimpleActions(Scene):
             tnn_matrix_left_dot,
             Line(
                 start=tnn_matrix_left_dot.get_right(),
-                end=tnn_matrix_left_dot.get_right() + INITIAL_LEG_LENGTH * RIGHT
+                end=tnn_matrix_left_dot.get_right() + INITIAL_LEG_LENGTH * RIGHT,
             ),
             Line(
                 start=tnn_matrix_left_dot.get_left(),
-                end=tnn_matrix_left_dot.get_left() + (INITIAL_LEG_LENGTH + 0.8) * LEFT
+                end=tnn_matrix_left_dot.get_left() + (INITIAL_LEG_LENGTH + 0.8) * LEFT,
             ),
         )
         tnn_matrix_left.shift(LEFT + DOWN)
@@ -443,26 +446,22 @@ class SimpleActions(Scene):
             tnn_matrix_right_dot,
             Line(
                 start=tnn_matrix_right_dot.get_right(),
-                end=tnn_matrix_right_dot.get_right() + (INITIAL_LEG_LENGTH + 0.8) * RIGHT
+                end=tnn_matrix_right_dot.get_right()
+                + (INITIAL_LEG_LENGTH + 0.8) * RIGHT,
             ),
             Line(
                 start=tnn_matrix_right_dot.get_left(),
-                end=tnn_matrix_right_dot.get_left() + INITIAL_LEG_LENGTH * LEFT
+                end=tnn_matrix_right_dot.get_left() + INITIAL_LEG_LENGTH * LEFT,
             ),
         )
         tnn_matrix_right.shift(RIGHT + DOWN)
 
-        self.play(
-            Create(tnn_matrix_left),
-            Create(tnn_matrix_right),
-            run_time=0.5
-        )
+        self.play(Create(tnn_matrix_left), Create(tnn_matrix_right), run_time=0.5)
 
         self.wait(1)
 
         dot_product_line = Line(
-            start=tnn_matrix_left.get_right(),
-            end=tnn_matrix_right.get_left()
+            start=tnn_matrix_left.get_right(), end=tnn_matrix_right.get_left()
         )
 
         self.play(Create(dot_product_line), run_time=0.5)
@@ -470,13 +469,15 @@ class SimpleActions(Scene):
         self.wait(1)
 
         # Text: Is also a vector, which is a one-legged object
-        rectangle_right_edge = tnn_matrix_right.get_right() + 0.4 * LEFT # a bit to the left, cutting the matrix
+        rectangle_right_edge = (
+            tnn_matrix_right.get_right() + 0.4 * LEFT
+        )  # a bit to the left, cutting the matrix
         rectangle_left_edge = tnn_matrix_left.get_left() + 0.5 * LEFT
         rectangle_center_height = DOWN
 
         surrounding_rectangle = Rectangle(
             height=(DEFAULT_DOT_RADIUS * 2 + 0.5) * 2,
-            width=np.linalg.norm( rectangle_right_edge - rectangle_left_edge ),
+            width=np.linalg.norm(rectangle_right_edge - rectangle_left_edge),
             color=RED_B,
         )
         surrounding_rectangle.move_to(dot_product_line.get_center())
@@ -496,19 +497,18 @@ class SimpleActions(Scene):
             tnn_matrix_dot,
             Line(
                 start=tnn_matrix_dot.get_right(),
-                end=tnn_matrix_dot.get_right() + INITIAL_LEG_LENGTH * RIGHT
+                end=tnn_matrix_dot.get_right() + INITIAL_LEG_LENGTH * RIGHT,
             ),
             Line(
                 start=tnn_matrix_dot.get_left(),
-                end=tnn_matrix_dot.get_left() + INITIAL_LEG_LENGTH * LEFT
+                end=tnn_matrix_dot.get_left() + INITIAL_LEG_LENGTH * LEFT,
             ),
         )
-        tnn_matrix.shift(spacing_horizontal*RIGHT + UP)
+        tnn_matrix.shift(spacing_horizontal * RIGHT + UP)
 
         self.play(Create(tnn_matrix), run_time=0.5)
 
         self.wait(1)
-
 
         # Text: You start by taking 2 vectors
 
@@ -518,10 +518,11 @@ class SimpleActions(Scene):
             tnn_vector_pointing_left_dot,
             Line(
                 start=tnn_vector_pointing_left_dot.get_left(),
-                end=tnn_vector_pointing_left_dot.get_left() + (INITIAL_LEG_LENGTH + 0.3) * LEFT
-            )
+                end=tnn_vector_pointing_left_dot.get_left()
+                + (INITIAL_LEG_LENGTH + 0.3) * LEFT,
+            ),
         )
-        tnn_vector_pointing_left.shift((spacing_horizontal - 0.5)*RIGHT + DOWN)
+        tnn_vector_pointing_left.shift((spacing_horizontal - 0.5) * RIGHT + DOWN)
 
         tnn_vector_pointing_right_dot = Dot(color=CIRCLE_COLOR)
         tnn_vector_pointing_right = VMobject()
@@ -529,28 +530,36 @@ class SimpleActions(Scene):
             tnn_vector_pointing_right_dot,
             Line(
                 start=tnn_vector_pointing_right_dot.get_right(),
-                end=tnn_vector_pointing_right_dot.get_right() + (INITIAL_LEG_LENGTH + 0.3) * RIGHT
-            )
+                end=tnn_vector_pointing_right_dot.get_right()
+                + (INITIAL_LEG_LENGTH + 0.3) * RIGHT,
+            ),
         )
-        tnn_vector_pointing_right.shift((spacing_horizontal + 0.5)*RIGHT + DOWN)
+        tnn_vector_pointing_right.shift((spacing_horizontal + 0.5) * RIGHT + DOWN)
 
         self.play(
             Create(tnn_vector_pointing_left),
             Create(tnn_vector_pointing_right),
-            run_time=0.5
+            run_time=0.5,
         )
 
         self.wait(1)
 
         # Text: and that's it. Here's a matrix.
-        rectangle_right_edge = tnn_vector_pointing_right.get_right() + 0.3 * LEFT # a bit to the left, cutting the vector
-        rectangle_left_edge = tnn_vector_pointing_left.get_left() + 0.3 * RIGHT # a bit to the right, cutting the vector
+        rectangle_right_edge = (
+            tnn_vector_pointing_right.get_right() + 0.3 * LEFT
+        )  # a bit to the left, cutting the vector
+        rectangle_left_edge = (
+            tnn_vector_pointing_left.get_left() + 0.3 * RIGHT
+        )  # a bit to the right, cutting the vector
         rectangle_center_height = DOWN
-        rectangle_center = (tnn_vector_pointing_right.get_center() + tnn_vector_pointing_left.get_center()) / 2
+        rectangle_center = (
+            tnn_vector_pointing_right.get_center()
+            + tnn_vector_pointing_left.get_center()
+        ) / 2
 
         surrounding_rectangle = Rectangle(
             height=(DEFAULT_DOT_RADIUS * 2 + 0.5) * 2,
-            width=np.linalg.norm( rectangle_right_edge - rectangle_left_edge ),
+            width=np.linalg.norm(rectangle_right_edge - rectangle_left_edge),
             color=RED_B,
         )
         surrounding_rectangle.move_to(rectangle_center)

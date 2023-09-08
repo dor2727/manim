@@ -1,8 +1,10 @@
 from manim import *
 
+
 class SimpleThetaDotCircle(Scene):
     omega = 1
     alpha = 1
+
     def theta_dot_of_theta(self, theta: float = None) -> float:
         if theta is None:
             theta = self.theta
@@ -16,12 +18,12 @@ class SimpleThetaDotCircle(Scene):
         self.wait()
 
     def show_axis(self):
-        x_start = np.array([0,0,0])
-        x_end = np.array([TAU,0,0])
+        x_start = np.array([0, 0, 0])
+        x_end = np.array([TAU, 0, 0])
 
         # PI is x_midpoint
-        y_start = np.array([PI,-2,0])
-        y_end = np.array([PI,2,0])
+        y_start = np.array([PI, -2, 0])
+        y_end = np.array([PI, 2, 0])
 
         x_axis = Line(x_start, x_end)
         y_axis = Line(y_start, y_end)
@@ -31,28 +33,27 @@ class SimpleThetaDotCircle(Scene):
 
     def add_x_labels(self):
         x_labels = [
-            MathTex("- \\pi"), MathTex("-\\frac{\\pi}{2}"),
-            MathTex("\\frac{\\pi}{2}"), MathTex("\\pi"),
+            MathTex("- \\pi"),
+            MathTex("-\\frac{\\pi}{2}"),
+            MathTex("\\frac{\\pi}{2}"),
+            MathTex("\\pi"),
         ]
-        x_label_location = [
-            -PI, -PI/2, PI/2, PI
-        ]
+        x_label_location = [-PI, -PI / 2, PI / 2, PI]
 
-        for l, loc in zip(x_labels, x_label_location):
-            l.scale(.5)
-            l.next_to(np.array([PI + loc, 0, 0]), DOWN)
-            self.add(l)
+        for label, loc in zip(x_labels, x_label_location):
+            label.scale(0.5)
+            label.next_to(np.array([PI + loc, 0, 0]), DOWN)
+            self.add(label)
 
         y_labels = [
-            MathTex("1"), MathTex("-1"),
+            MathTex("1"),
+            MathTex("-1"),
         ]
-        y_label_location = [
-            1, -1
-        ]
-        for l, loc in zip(y_labels, y_label_location):
-            l.scale(.5)
-            l.next_to(np.array([PI, loc, 0]), LEFT)
-            self.add(l)
+        y_label_location = [1, -1]
+        for label, loc in zip(y_labels, y_label_location):
+            label.scale(0.5)
+            label.next_to(np.array([PI, loc, 0]), LEFT)
+            self.add(label)
 
     def show_circle(self):
         circle = Circle(radius=1)
@@ -82,13 +83,15 @@ class SimpleThetaDotCircle(Scene):
             return Line(origin_point, dot.get_center(), color=BLUE)
 
         def get_line_to_curve():
-            return Line(dot.get_center(), self._get_x_y(), color=YELLOW_A, stroke_width=2 )
-
+            return Line(
+                dot.get_center(), self._get_x_y(), color=YELLOW_A, stroke_width=2
+            )
 
         self.curve_trace = VGroup()
         self.curve_trace.add(Dot(self._get_x_y(), radius=0.08, color=RED))
+
         def add_curve_trace():
-            self.curve_trace[-1].scale(.25)
+            self.curve_trace[-1].scale(0.25)
             self.curve_trace.add(Dot(self._get_x_y(), radius=0.08, color=RED))
             return self.curve_trace[-250:]
 
@@ -110,12 +113,14 @@ class SimpleThetaDotCircle(Scene):
 
         return np.array([PI + theta, self.theta_dot_of_theta(theta), 0])
 
+
 class AbsThetaDotCircle(SimpleThetaDotCircle):
     def theta_dot_of_theta(self, theta: float = None) -> float:
         if theta is None:
             theta = self.theta
 
         return abs(self.theta) + 0.1
+
 
 class ChaosThetaDotCircle(SimpleThetaDotCircle):
     omega = 1.5
