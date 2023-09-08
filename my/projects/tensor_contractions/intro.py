@@ -49,6 +49,16 @@ def create_vector_left(shape="square", leg_length: float = INITIAL_LEG_LENGTH):
     return vector
 
 
+def create_vector_right(shape="square", leg_length: float = INITIAL_LEG_LENGTH):
+    vector = VMobject()
+    vector_body = create_body(shape)
+    vector.add(
+        vector_body,
+        create_right_leg(vector_body, leg_length),
+    )
+    return vector
+
+
 def create_matrix_horizontal(
     shape="square",
     left_leg_length: float = INITIAL_LEG_LENGTH,
@@ -62,6 +72,28 @@ def create_matrix_horizontal(
         create_right_leg(matrix_body, right_leg_length),
     )
     return matrix
+
+
+def create_connecting_horizontal_line(left_mobject, right_mobject):
+    return Line(
+        start=left_mobject.get_right(),
+        end=right_mobject.get_left(),
+    )
+
+
+def create_surrounding_horizontal_rectangle(
+    left_mobject, right_mobject, extra_width=0.3, extra_height=0.5
+):
+    rectangle_right_edge = right_mobject.get_right() + extra_width * RIGHT
+    rectangle_left_edge = left_mobject.get_left() + extra_width * LEFT
+
+    width = np.linalg.norm(rectangle_right_edge - rectangle_left_edge)
+
+    return Rectangle(
+        height=(DEFAULT_DOT_RADIUS * 2 + extra_height) * 2,
+        width=width,
+        color=RED_B,
+    )
 
 
 class Intro(Scene):
@@ -143,6 +175,59 @@ class Intro(Scene):
 
         new_body.move_to(original_body.get_center())
         self.play(Transform(original_body, new_body))
+
+
+class IntroActions(Scene):
+    def construct(self):
+        # Text: For example,
+        #       We can represent a number as a circle with no legs
+        #       < pause >
+        #       Likewise, taking 2 vectors
+        #       < pause >
+        #       And taking their dot product
+        #       < pause >
+        #       Gives us something that's also an object with no legs
+        self.sub_scene_dot_product()
+        self.wait(1)
+
+        # self.sub_scene_matrix_vector_multiplication()
+        self.wait(1)
+
+        # self.sub_scene_matrix_matrix_multiplication()
+        self.wait(1)
+
+    def sub_scene_dot_product(self):
+        tnn_number = create_body("dot")
+        tnn_number.shift(spacing_horizontal * LEFT + UP)
+
+        self.play(Create(tnn_number), run_time=0.5)
+        self.wait(1)
+
+        #     the vector on the left  will point to the right
+        # and the vector on the right will point to the left
+        tnn_vector_left = create_vector_right()
+        tnn_vector_left.shift((spacing_horizontal + 1) * LEFT + DOWN)
+
+        tnn_vector_right = create_vector_left()
+        tnn_vector_right.shift((spacing_horizontal - 1) * LEFT + DOWN)
+
+        self.play(Create(tnn_vector_left), Create(tnn_vector_right), run_time=0.5)
+        self.wait(1)
+
+        dot_product_line = create_connecting_horizontal_line(
+            tnn_vector_left, tnn_vector_right
+        )
+
+        self.play(Create(dot_product_line), run_time=0.5)
+        self.wait(1)
+
+        surrounding_rectangle = create_surrounding_horizontal_rectangle(
+            tnn_vector_left, tnn_vector_right
+        )
+        surrounding_rectangle.move_to(dot_product_line.get_center())
+
+        self.play(Create(surrounding_rectangle), run_time=0.5)
+        self.wait(1)
 
 
 class SimpleActions(Scene):
