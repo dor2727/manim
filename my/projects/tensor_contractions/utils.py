@@ -111,3 +111,32 @@ def get_greek_letters():
     greek_codes = range(alpha_code, omega_code + 1)
     greek_symbols = map(chr, greek_codes)
     return list(greek_symbols)
+
+
+def get_greek_letter_names():
+    return [
+        "Alpha",
+        "Beta",
+        "Gamma",
+        "Delta",
+        "Epsilon",
+        "Zeta",
+        "Eta",
+        "Theta",
+        "Iota",
+        "Kappa",
+        "Lambda",
+        "Mu",
+        "Nu",
+        "Xi",
+        "Omicron",
+        "Pi",
+        "Rho",
+        "Sigma",
+        "Tau",
+        "Upsilon",
+        "Phi",
+        "Chi",
+        "Psi",
+        "Omega",
+    ]
