@@ -39,6 +39,20 @@ def create_right_leg(body: Mobject, leg_length: float = INITIAL_LEG_LENGTH):
     )
 
 
+def create_up_leg(body: Mobject, leg_length: float = INITIAL_LEG_LENGTH):
+    return Line(
+        start=body.get_top(),
+        end=body.get_top() + leg_length * UP,
+    )
+
+
+def create_down_leg(body: Mobject, leg_length: float = INITIAL_LEG_LENGTH):
+    return Line(
+        start=body.get_bottom(),
+        end=body.get_bottom() + leg_length * DOWN,
+    )
+
+
 def create_vector_left(shape="square", leg_length: float = INITIAL_LEG_LENGTH):
     vector = VMobject()
     vector_body = create_body(shape)
@@ -70,6 +84,21 @@ def create_matrix_horizontal(
         matrix_body,
         create_left_leg(matrix_body, left_leg_length),
         create_right_leg(matrix_body, right_leg_length),
+    )
+    return matrix
+
+
+def create_matrix_vertical(
+    shape="square",
+    up_leg_length: float = INITIAL_LEG_LENGTH,
+    down_leg_length: float = INITIAL_LEG_LENGTH,
+):
+    matrix = VMobject()
+    matrix_body = create_body(shape)
+    matrix.add(
+        matrix_body,
+        create_up_leg(matrix_body, up_leg_length),
+        create_down_leg(matrix_body, down_leg_length),
     )
     return matrix
 

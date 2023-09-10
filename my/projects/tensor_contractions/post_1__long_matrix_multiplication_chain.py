@@ -1,16 +1,9 @@
 import string
 
 from utils import (
-    create_body,
     create_connecting_horizontal_line,
-    create_left_leg,
     create_matrix_horizontal,
-    create_right_leg,
-    create_surrounding_horizontal_rectangle,
-    create_vector_left,
-    create_vector_right,
     get_greek_letter_names,
-    spacing_horizontal,
 )
 
 from manim import *
@@ -140,8 +133,10 @@ class MatrixMultiplicationChain(Scene):
         )
 
         string_equation = f"${string_sum} {string_matrices}$"
-        print(string_equation)
-        return Tex(string_equation)
+        # print(string_equation)
+
+        self.equation = Tex(string_equation)
+        return self.equation
 
 
 class MatrixMultiplicationChain_2(MatrixMultiplicationChain):
