@@ -53,6 +53,15 @@ def create_down_leg(body: Mobject, leg_length: float = INITIAL_LEG_LENGTH):
     )
 
 
+def create_diagonal_leg(
+    body: Mobject, direction, leg_length: float = INITIAL_LEG_LENGTH
+):
+    return Line(
+        start=body.get_corner(direction),
+        end=body.get_corner(direction) + leg_length * direction,
+    )
+
+
 def create_vector_left(shape="square", leg_length: float = INITIAL_LEG_LENGTH):
     vector = VMobject()
     vector_body = create_body(shape)
