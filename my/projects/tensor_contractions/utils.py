@@ -1,3 +1,5 @@
+from functools import partial
+
 from consts import (
     CIRCLE_COLOR,
     INITIAL_LEG_LENGTH,
@@ -178,3 +180,8 @@ def get_greek_letter_names():
         "Psi",
         "Omega",
     ]
+
+
+Physics_template = TexTemplate()
+Physics_template.add_to_preamble("\\usepackage{braket}")
+PhysicsTex = partial(Tex, tex_template=Physics_template)
