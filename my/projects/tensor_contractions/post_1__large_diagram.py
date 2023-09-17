@@ -160,37 +160,7 @@ class LargeDiagram(Scene):
         return self.contraction_lines
 
     def get_equation(self):
-        # self.equation_string = "$ \\sum_\\alpha \\sum_\\beta \\sum_\\gamma \\sum_\\delta A_{\\alpha \\beta \\gamma} B_\\alpha C_{\\beta \\delta} D_{\\delta \\gamma} $"
-        # self.equation = Tex(self.equation_string)
-
-        # self.equation_strings = [
-        #     "$ ",
-        #     "\\sum_\\alpha ",
-        #     "\\sum_\\beta ",
-        #     "\\sum_\\gamma ",
-        #     "\\sum_\\delta ",
-        #     "A_{ ",
-        #     "\\alpha ",
-        #     "\\beta ",
-        #     "\\gamma ",
-        #     "} ",
-        #     "B_{ ",
-        #     "\\alpha ",
-        #     "} ",
-        #     "C_{ ",
-        #     "\\beta ",
-        #     "\\delta ",
-        #     "} ",
-        #     "D_{ ",
-        #     "\\delta ",
-        #     "\\gamma ",
-        #     "} ",
-        #     "$ ",
-        # ]
-        # self.equation = Tex(*self.equation_strings)
-
         self.equation_strings = [
-            "",
             "$ \\sum_\\alpha $ ",
             "$ \\sum_\\beta $ ",
             "$ \\sum_\\gamma $ ",
@@ -210,17 +180,6 @@ class LargeDiagram(Scene):
         ]
         self.equation = Tex(*self.equation_strings)
 
-        # self.equation_string = "$ \\sum_\\alpha \\sum_\\beta \\sum_\\gamma \\sum_\\delta A_{\\alpha \\beta \\gamma} B_\\alpha C_{\\beta \\delta} D_{\\delta \\gamma} $"
-        # self.equation = Tex(self.equation_string, tex_to_color_map={
-        #     "\\sum_\\alpha": RED,
-        #     "\\alpha": RED,
-        #     "\\sum_\\beta": BLUE,
-        #     "\\beta": BLUE,
-        #     "\\sum_\\gamma": GREEN,
-        #     "\\gamma": GREEN,
-        #     "\\sum_\\delta": PURPLE,
-        #     "\\delta": PURPLE,
-        # })
         self.equation.shift(2.5 * DOWN)
         return self.equation
 
@@ -284,5 +243,318 @@ class LargeDiagram(Scene):
                     Transform(old_obj, new_obj)
                     for old_obj, new_obj in zip(old_objs[key], new_objs[key])
                 ),
-                run_time=0.6
+                run_time=0.6,
             )
+
+
+class LargeDiagramContracted(LargeDiagram):
+    def construct(self):
+        self.add_previous_parts()
+        self._fix_bodies()
+        self._fix_legs()
+
+        self.wait(1)
+
+        self.contract_A_B()
+
+        self.wait(1)
+
+        self.contract_C_D()
+
+        self.wait(1)
+
+        self.contract_all()
+
+        self.wait(1)
+
+    def add_previous_parts(self):
+        bodies = self.create_bodies()
+        legs = self.grow_legs()
+        leg_names = self.create_leg_names()
+        contraction_lines = self.contract_legs()
+        equation = self.get_equation()
+
+        self.color_previous_parts()
+
+        self.add(
+            *bodies,
+            *legs["A"],
+            *legs["B"],
+            *legs["C"],
+            *legs["D"],
+            *leg_names,
+            *contraction_lines,
+            equation,
+        )
+
+    def color_previous_parts(self):
+        objs = {
+            "A-B": (
+                self.contraction_lines[0],
+                self.legs["A"][0],
+                self.legs["B"][0],
+                self.leg_A_B,
+                self.equation.submobjects[0],
+                self.equation.submobjects[5],
+                self.equation.submobjects[9],
+            ),
+            "A-C": (
+                self.contraction_lines[1],
+                self.legs["A"][1],
+                self.legs["C"][0],
+                self.leg_A_C,
+                self.equation.submobjects[1],
+                self.equation.submobjects[6],
+                self.equation.submobjects[11],
+            ),
+            "A-D": (
+                self.contraction_lines[3],
+                self.legs["A"][2],
+                self.legs["D"][1],
+                self.leg_A_D,
+                self.equation.submobjects[2],
+                self.equation.submobjects[7],
+                self.equation.submobjects[15],
+            ),
+            "C-D": (
+                self.contraction_lines[2],
+                self.legs["C"][1],
+                self.legs["D"][0],
+                self.leg_C_D,
+                self.equation.submobjects[3],
+                self.equation.submobjects[12],
+                self.equation.submobjects[14],
+            ),
+        }
+        colors = {
+            "A-B": RED,
+            "A-C": BLUE,
+            "A-D": GREEN,
+            "C-D": PURPLE,
+        }
+
+        for key in objs:
+            for old_obj in objs[key]:
+                old_obj.set_color(colors[key])
+
+    def _fix_bodies(self):
+        self.A, self.B, self.C, self.D = self.bodies
+
+        self.A_body, self.A_name = self.A.submobjects
+        self.B_body, self.B_name = self.B.submobjects
+        self.C_body, self.C_name = self.C.submobjects
+        self.D_body, self.D_name = self.D.submobjects
+
+        self.remove(self.A, self.B, self.C, self.D)
+        self.add(
+            self.A_body,
+            self.A_name,
+            self.B_body,
+            self.B_name,
+            self.C_body,
+            self.C_name,
+            self.D_body,
+            self.D_name,
+        )
+
+    def _fix_legs(self):
+        gamma_lines = (
+            self.contraction_lines[3],
+            self.legs["A"][2],
+            self.legs["D"][1],
+        )
+        self.gamma_leg = Line(
+            start=self.A_body.get_corner(RIGHT + DOWN),
+            end=self.D_body.get_corner(LEFT + UP),
+        )
+        self.gamma_leg.set_color(gamma_lines[0].get_color())
+
+        beta_lines = (
+            self.contraction_lines[1],
+            self.legs["A"][1],
+            self.legs["C"][0],
+        )
+        self.beta_leg = Line(
+            start=self.A_body.get_bottom(),
+            end=self.C_body.get_top(),
+        )
+        self.beta_leg.set_color(beta_lines[0].get_color())
+
+        self.remove(*beta_lines, *gamma_lines)
+        self.add(self.beta_leg, self.gamma_leg)
+
+    def contract_A_B(self):
+        new_AB_body = Rectangle(
+            height=self.A_body.side_length,
+            width=self.A_body.side_length * 1.5,
+            fill_opacity=1.0,
+        )
+        new_AB_body.set_color(self.A_body.get_color())
+        new_AB_body.align_to(self.A_body, LEFT + UP)
+
+        self.AB_body = VMobject()
+        self.AB_body.add(self.A_body, self.B_body)
+
+        new_B_name = self.B_name.copy()
+        new_B_name.next_to(self.A_name, RIGHT, buff=0)
+
+        new_gamma_leg = Line(
+            start=new_AB_body.get_corner(RIGHT + DOWN),
+            end=self.D_body.get_corner(LEFT + UP),
+        )
+        new_gamma_leg.set_color(self.gamma_leg.get_color())
+
+        for obj in (new_AB_body, self.A_body, self.B_body):
+            obj.set_z_index(1)
+        for obj in (self.A_name, self.B_name, new_B_name):
+            obj.set_z_index(2)
+
+        new_AB_tex = Tex("$ (AB) $")
+        new_AB_tex.align_to(self.equation.submobjects[4], LEFT + DOWN)
+        self.AB_tex = VMobject()
+        self.AB_tex.add(
+            self.equation.submobjects[4],  # A
+            self.equation.submobjects[8],  # B
+        )
+
+        A_B_connections = [
+            self.legs["A"][0],
+            *self.legs["B"],
+            self.leg_A_B,
+            self.contraction_lines[0],
+            self.equation.submobjects[0],  # sum alpha
+            self.equation.submobjects[5],  # _alpha of A
+            self.equation.submobjects[9],  # _alpha of B
+        ]
+
+        self.play(
+            Transform(self.AB_body, new_AB_body),
+            Transform(self.A_name, self.A_name),
+            Transform(self.B_name, new_B_name),
+            Transform(self.gamma_leg, new_gamma_leg),
+            Transform(self.AB_tex, new_AB_tex),
+            *(FadeOut(i) for i in A_B_connections),
+            run_time=2,
+        )
+
+        self.new_AB_tex = new_AB_tex
+
+        # self.B_name = new_B_name
+        # self.gamma_leg = new_gamma_leg
+
+    def contract_C_D(self):
+        new_CD_body = Rectangle(
+            height=self.C_body.side_length,
+            width=self.C_body.side_length * 1.5,
+            fill_opacity=1.0,
+        )
+        new_CD_body.set_color(self.C_body.get_color())
+        new_CD_body.align_to(self.C_body, LEFT + UP)
+
+        self.CD_body = VMobject()
+        self.CD_body.add(self.C_body, self.D_body)
+
+        new_D_name = self.D_name.copy()
+        new_D_name.next_to(self.C_name, RIGHT, buff=0)
+
+        new_gamma_leg = Line(
+            start=self.AB_body.get_corner(RIGHT + DOWN),
+            end=new_CD_body.get_corner(RIGHT + UP),
+        )
+        new_gamma_leg.set_color(self.gamma_leg.get_color())
+
+        for obj in (new_CD_body, self.C_body, self.D_body):
+            obj.set_z_index(1)
+        for obj in (self.C_name, self.D_name, new_D_name):
+            obj.set_z_index(2)
+
+        new_CD_tex = Tex("$ (CD) $")
+        new_CD_tex.align_to(self.equation.submobjects[10], RIGHT + DOWN)
+        self.CD_tex = VMobject()
+        self.CD_tex.add(
+            self.equation.submobjects[10],  # C
+            self.equation.submobjects[13],  # D
+        )
+        sub_gamma_tex = self.equation.submobjects[15]  # _gamma of D
+        new_sub_gamma_tex = sub_gamma_tex.copy()  # _gamma of D
+        new_sub_gamma_tex.move_to(self.equation.submobjects[12])  # _delta of C
+
+        C_D_connections = [
+            self.legs["C"][1],
+            self.legs["D"][0],
+            self.leg_C_D,
+            self.contraction_lines[2],
+            self.equation.submobjects[3],  # sum delta
+            self.equation.submobjects[12],  # _delta of C
+            self.equation.submobjects[14],  # _delta of D
+        ]
+
+        new_leg_A_D = self.leg_A_D.copy()
+        new_leg_A_D.move_to(new_gamma_leg)
+        new_leg_A_D.shift(0.5 * RIGHT)
+
+        self.play(
+            Transform(self.CD_body, new_CD_body),  # join the bodies
+            Transform(self.C_name, self.C_name),  # update the name z-position
+            Transform(self.D_name, new_D_name),  # move `D` near `C`
+            Transform(self.gamma_leg, new_gamma_leg),  # move the name of the gamma leg
+            Transform(self.leg_A_D, new_leg_A_D),  # move the gamma leg
+            Transform(self.CD_tex, new_CD_tex),  # change the equation to have `(CD)`
+            Transform(sub_gamma_tex, new_sub_gamma_tex),  # move the lone index
+            *(FadeOut(i) for i in C_D_connections),
+            run_time=2,
+        )
+
+        self.new_CD_tex = new_CD_tex
+        self.new_sub_gamma_tex = new_sub_gamma_tex
+        # self.D_name = new_D_name
+        # self.gamma_leg = new_gamma_leg
+
+    def contract_all(self):
+        new_body = Rectangle(
+            height=np.linalg.norm(self.AB_body.get_top() - self.CD_body.get_bottom()),
+            width=self.CD_body.width,
+            fill_opacity=1.0,
+        )
+        new_body.set_color(self.AB_body.get_color())
+        new_body.align_to(self.AB_body, LEFT + UP)
+
+        self.all_bodies = VMobject()
+        self.all_bodies.add(self.AB_body, self.CD_body)
+
+        what_to_remove = (
+            self.gamma_leg,
+            self.beta_leg,
+            self.A_name,
+            self.B_name,
+            self.C_name,
+            self.D_name,
+            self.leg_A_C,
+            self.leg_A_D,
+        )
+
+        new_equation = Text("Result")
+        new_equation.move_to(self.equation)
+
+        self.equation.submobjects.pop(14)  # _delta of D
+        self.equation.submobjects.pop(13)  # D
+        self.equation.submobjects.pop(12)  # _delta of C
+        # self.equation.submobjects.pop(10) # C
+        self.equation.submobjects.pop(9)  # _alpha of B
+        self.equation.submobjects.pop(8)  # B
+        self.equation.submobjects.pop(5)  # _alpha of A
+        # self.equation.submobjects.pop(4) # A
+        self.equation.submobjects.pop(3)  # sum delta
+        self.equation.submobjects.pop(0)  # sum alpha
+
+        self.play(
+            Transform(self.all_bodies, new_body),
+            Transform(self.equation, new_equation),
+            *(FadeOut(i) for i in what_to_remove),
+            run_time=2,
+        )
+
+        new_small_body = create_body()
+        new_small_body.move_to(new_body)
+
+        self.play(Transform(self.all_bodies, new_small_body), run_time=1)
