@@ -50,30 +50,39 @@ class Intro(Scene):
         self.some_matrix = some_matrix = Matrix([["\\pi", 5], [-1, "e"]])
         some_matrix.shift(spacing_horizontal * RIGHT)
 
-        self.play(Create(some_number), run_time=0.5)
+        self.number_name = Text("Number")
+        self.number_name.move_to(self.some_number.get_center() + 2 * UP)
+
+        self.vector_name = Text("Vector")
+        self.vector_name.move_to(self.some_vector.get_center() + 2 * UP)
+
+        self.matrix_name = Text("Matrix")
+        self.matrix_name.move_to(self.some_matrix.get_center() + 2 * UP)
+
+        self.play(Create(some_number), Create(self.number_name), run_time=0.5)
         self.wait(0.5)
-        self.play(Create(some_vector), run_time=0.5)
+        self.play(Create(some_vector), Create(self.vector_name), run_time=0.5)
         self.wait(0.5)
-        self.play(Create(some_matrix), run_time=0.5)
+        self.play(Create(some_matrix), Create(self.matrix_name), run_time=0.5)
         self.wait(0.5)
 
     def move_mathematical_objects_aside(self):
         self.play(
-            self.some_number.animate.shift(2 * UP),
-            self.some_vector.animate.shift(2 * UP),
-            self.some_matrix.animate.shift(2 * UP),
+            self.some_number.animate.shift(2 * DOWN),
+            self.some_vector.animate.shift(2 * DOWN),
+            self.some_matrix.animate.shift(2 * DOWN),
             run_time=1.5,
         )
 
     def introduce_tnn_objects(self):
         self.tnn_number = tnn_number = create_body("dot")
-        tnn_number.shift(spacing_horizontal * LEFT + DOWN)
+        tnn_number.shift(spacing_horizontal * LEFT)
 
         self.tnn_vector = tnn_vector = create_vector_left("dot")
-        tnn_vector.shift(DOWN)
+        # tnn_vector.shift()
 
         self.tnn_matrix = tnn_matrix = create_matrix_horizontal("dot")
-        tnn_matrix.shift(spacing_horizontal * RIGHT + DOWN)
+        tnn_matrix.shift(spacing_horizontal * RIGHT)
 
         self.play(Create(tnn_number), run_time=0.5)
         self.wait(0.5)

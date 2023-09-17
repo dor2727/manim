@@ -27,6 +27,28 @@ def create_body(shape: str = "square", size: float = DEFAULT_DOT_RADIUS * 3):
     return body
 
 
+def create_body_with_name_inside(
+    name: str, shape: str = "square", size: float = DEFAULT_DOT_RADIUS * 5
+):
+    # possible shape values: "dot" | "square" | "diamond"
+    body: Mobject
+    if shape == "dot":
+        body = Dot(radius=size, color=CIRCLE_COLOR)
+    else:  # square / diamond
+        body = Square(side_length=size * 2, color=SQUARE_COLOR, fill_opacity=1.0)
+
+    if shape == "diamond":
+        body.rotate(PI / 4)
+
+    name_tex = Tex(name, stroke_width=1, stroke_color=BLACK)
+    name_tex.move_to(body.get_center())
+
+    body_and_name = VMobject()
+    body_and_name.add(body, name_tex)
+
+    return body_and_name
+
+
 def create_left_leg(body: Mobject, leg_length: float = INITIAL_LEG_LENGTH):
     return Line(
         start=body.get_left(),

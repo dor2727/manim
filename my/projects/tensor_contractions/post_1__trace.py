@@ -146,8 +146,6 @@ class TwoMatrixTrace(MatrixMultiplicationChain_2):
 
 
 class TwoVerticalMatrixTrace(Scene):
-    Arc
-
     def construct(self):
         matrix_up = create_matrix_horizontal()
         matrix_up.shift(UP)
