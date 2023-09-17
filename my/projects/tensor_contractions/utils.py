@@ -143,6 +143,13 @@ def create_connecting_horizontal_line(left_mobject, right_mobject):
     )
 
 
+def create_connecting_line(edge_direction, edge_mobject, anti_edge_mobject):
+    return Line(
+        start=edge_mobject.get_corner(edge_direction),
+        end=anti_edge_mobject.get_corner(-edge_direction),
+    )
+
+
 def create_surrounding_horizontal_rectangle(
     left_mobject, right_mobject, extra_width=0.3, extra_height=0.5
 ):
