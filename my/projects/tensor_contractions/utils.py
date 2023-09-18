@@ -137,13 +137,19 @@ def create_matrix_vertical(
 
 
 def create_A(
+    name=None,
     shape="square",
     left_leg_length: float = INITIAL_LEG_LENGTH,
     right_leg_length: float = INITIAL_LEG_LENGTH,
     down_leg_length: float = INITIAL_LEG_LENGTH,
 ):
     A = VMobject()
-    A_body = create_body(shape)
+
+    if name is None:
+        A_body = create_body(shape)
+    else:
+        A_body = create_body_with_name_inside(name, shape)
+
     A.add(
         A_body,
         create_left_leg(A_body, left_leg_length),
@@ -154,13 +160,19 @@ def create_A(
 
 
 def create_A_dagger(
+    name=None,
     shape="square",
     left_leg_length: float = INITIAL_LEG_LENGTH,
     right_leg_length: float = INITIAL_LEG_LENGTH,
     up_leg_length: float = INITIAL_LEG_LENGTH,
 ):
     A = VMobject()
-    A_body = create_body(shape)
+
+    if name is None:
+        A_body = create_body(shape)
+    else:
+        A_body = create_body_with_name_inside(name, shape)
+
     A.add(
         A_body,
         create_left_leg(A_body, left_leg_length),

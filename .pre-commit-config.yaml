@@ -75,4 +75,4 @@ repos:
     hooks:
       - id: codespell
         files: ^.*\.(py|md|rst)$
-        args: ["-L", "medias,nam"]
+        args: ["-L", "medias,nam,braket,bra,ket"]
