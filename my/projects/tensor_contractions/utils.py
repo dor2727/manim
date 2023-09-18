@@ -136,10 +136,51 @@ def create_matrix_vertical(
     return matrix
 
 
+def create_A(
+    shape="square",
+    left_leg_length: float = INITIAL_LEG_LENGTH,
+    right_leg_length: float = INITIAL_LEG_LENGTH,
+    down_leg_length: float = INITIAL_LEG_LENGTH,
+):
+    A = VMobject()
+    A_body = create_body(shape)
+    A.add(
+        A_body,
+        create_left_leg(A_body, left_leg_length),
+        create_right_leg(A_body, right_leg_length),
+        create_down_leg(A_body, down_leg_length),
+    )
+    return A
+
+
+def create_A_dagger(
+    shape="square",
+    left_leg_length: float = INITIAL_LEG_LENGTH,
+    right_leg_length: float = INITIAL_LEG_LENGTH,
+    up_leg_length: float = INITIAL_LEG_LENGTH,
+):
+    A = VMobject()
+    A_body = create_body(shape)
+    A.add(
+        A_body,
+        create_left_leg(A_body, left_leg_length),
+        create_right_leg(A_body, right_leg_length),
+        create_up_leg(A_body, up_leg_length),
+    )
+    return A
+
+
 def create_connecting_horizontal_line(left_mobject, right_mobject):
     return Line(
         start=left_mobject.get_right(),
         end=right_mobject.get_left(),
+    )
+
+
+def create_connecting_vertical_line(top_mobject, bottom_mobject):
+    return Line(
+        start=top_mobject.get_bottom(),
+        end=bottom_mobject.get_top(),
     )
 
 
